@@ -41,6 +41,49 @@ public class BST<E extends Comparable<E>> {
         integerBST.midOrder();
         //3,7,6,9,12,11,8
         integerBST.postOrder();
+        System.out.println(integerBST.removeMin());
+        System.out.println(integerBST.contains(3));
+        System.out.println(integerBST.contains(12));
+        System.out.println(integerBST.removeMin());
+        integerBST.remove(8);
+    }
+
+    public void remove(E e) {
+        if (!contains(e)) {
+            return;
+        }
+        root = remove(root, e);
+    }
+
+    public Node remove(Node node, E e) {
+        if (node == null) {
+            return null;
+        }
+        if (e.compareTo(node.e) > 0) {
+            node.left = remove(node.left, e);
+            return node;
+        } else if (e.compareTo(node.e) > 0) {
+            node.right = remove(node.right, e);
+            return node;
+        }
+        size--;
+        if (node.left == null) {
+            Node right = node.right;
+            node.right = null;
+            return right;
+        }
+        if (node.right == null) {
+            Node left = node.left;
+            node.left = null;
+            return left;
+        }
+        Node successor = minimum(node.right);
+        successor.right = removeMin(node.right);
+        size++;
+        successor.left = node.left;
+        node.left = node.right = null;
+        node = null;
+        return successor;
     }
 
     private void midOrder(Node node) {
@@ -58,7 +101,36 @@ public class BST<E extends Comparable<E>> {
      * @return 最小元素
      */
     public E removeMin() {
-        return null;
+        Node minimum = minimum(root);
+        if (minimum == null) {
+            return null;
+        }
+        root = removeMin(root);
+        return minimum.e;
+    }
+
+    private Node removeMin(Node node) {
+        if (null == node) {
+            return null;
+        }
+        if (node.left == null) {
+            Node rN = node.right;
+            node.right = null;
+            size--;
+            return rN;
+        }
+        node.left = removeMin(node.left);
+        return node;
+    }
+
+    private Node minimum(Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.left == null) {
+            return node;
+        }
+        return minimum(node.left);
     }
 
     /**
@@ -67,7 +139,36 @@ public class BST<E extends Comparable<E>> {
      * @return 最大元素
      */
     public E removeMax() {
-        return null;
+        Node maximum = maximum(root);
+        if (maximum == null) {
+            return null;
+        }
+        root = removeMax(root);
+        return maximum.e;
+    }
+
+    private Node removeMax(Node node) {
+        if (null == node) {
+            return null;
+        }
+        if (node.right == null) {
+            Node rN = node.left;
+            node.left = null;
+            size--;
+            return rN;
+        }
+        node.right = removeMin(node.right);
+        return node;
+    }
+
+    private Node maximum(Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.right == null) {
+            return node;
+        }
+        return maximum(node.right);
     }
 
     public void preOrder() {
@@ -151,9 +252,9 @@ public class BST<E extends Comparable<E>> {
             return true;
         }
         if (node.e.compareTo(e) < 0) {
-            return contains(node.left, e);
+            return contains(node.right, e);
         }
-        return contains(node.right, e);
+        return contains(node.left, e);
     }
 
     class Node {
