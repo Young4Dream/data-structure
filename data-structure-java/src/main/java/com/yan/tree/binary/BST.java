@@ -14,10 +14,6 @@ public class BST<E extends Comparable<E>> {
     private Node root;
     private int size;
 
-    public int size() {
-        return size;
-    }
-
     public static void main(String[] args) {
         BST<Integer> integerBST = new BST<>();
         integerBST.add(8);
@@ -46,6 +42,10 @@ public class BST<E extends Comparable<E>> {
         System.out.println(integerBST.contains(12));
         System.out.println(integerBST.removeMin());
         integerBST.remove(8);
+    }
+
+    public int size() {
+        return size;
     }
 
     public void remove(E e) {

@@ -14,7 +14,7 @@ public class Solution {
     private static final Character[] OUTPUT_CHARS;
 
     static {
-        INPUT_CHARS =  new Character[]{'(', '[', '{', '<', '《', '（', '【'};
+        INPUT_CHARS = new Character[]{'(', '[', '{', '<', '《', '（', '【'};
         OUTPUT_CHARS = new Character[]{')', ']', '}', '>', '》', '）', '】'};
     }
 

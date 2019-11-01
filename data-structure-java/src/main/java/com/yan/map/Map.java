@@ -12,7 +12,7 @@ public interface Map<K, V> {
 
     boolean containsKey(K k);
 
-    V get(V v);
+    V get(K k);
 
     void set(K k, V v);
 
