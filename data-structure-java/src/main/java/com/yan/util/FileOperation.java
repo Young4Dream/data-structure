@@ -5,17 +5,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 // 文件相关操作
 public class FileOperation {
     // 读取文件名称为filename中的内容，并将其中包含的所有词语放进words中
-    public static boolean readFile(String filename, ArrayList<String> words) {
-
-        if (filename == null || words == null) {
+    public static List<String> readFile(String filename) {
+        List<String> words = new ArrayList<>();
+        if (filename == null) {
             System.out.println("filename is null or words is null");
-            return false;
+            return words;
         }
 
         // 文件读取
@@ -28,10 +29,10 @@ public class FileOperation {
                 scanner = new Scanner(new BufferedInputStream(fis), "UTF-8");
                 scanner.useLocale(Locale.ENGLISH);
             } else
-                return false;
+                return words;
         } catch (IOException ioe) {
             System.out.println("Cannot open " + filename);
-            return false;
+            return words;
         }
 
         // 简单分词
@@ -52,7 +53,7 @@ public class FileOperation {
                     i++;
         }
 
-        return true;
+        return words;
     }
 
     // 寻找字符串s中，从start的位置开始的第一个字母字符的位置

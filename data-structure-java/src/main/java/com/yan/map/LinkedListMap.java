@@ -12,6 +12,10 @@ public class LinkedListMap<K, V> implements Map<K, V> {
     private Node dummyHead;
     private int size;
 
+    public LinkedListMap() {
+        dummyHead = new Node();
+    }
+
     private Node getNode(K key) {
         Node cur = dummyHead.next;
         Node res = null;
@@ -32,7 +36,11 @@ public class LinkedListMap<K, V> implements Map<K, V> {
             node.value = v;
             return;
         }
-        dummyHead.next = new Node(k, v);
+        Node cur = dummyHead;
+        while (!Objects.isNull(cur.next)) {
+            cur = cur.next;
+        }
+        cur.next = new Node(k, v);
         size++;
     }
 
