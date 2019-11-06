@@ -111,6 +111,12 @@ public class Array<T> {
         return res;
     }
 
+    public void swap(int i, int j) {
+        T t = data[i];
+        data[i] = data[j];
+        data[j] = t;
+    }
+
     public T removeFirst() {
         return remove(0);
     }
