@@ -6,7 +6,7 @@ package com.yan.array.dynamic;
  * 2019/9/30 0030 16:42
  */
 @SuppressWarnings("all")
-public class Array<E> extends com.yan.array.generic.Array<E> {
+public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneable {
     public Array(int capacity) {
         super(capacity);
     }
@@ -15,10 +15,17 @@ public class Array<E> extends com.yan.array.generic.Array<E> {
         super();
     }
 
+    @Override
+    public Array<E> clone() throws CloneNotSupportedException {
+        Array<E> clone = (Array<E>)super.clone();
+        clone.data = this.data.clone();
+        clone.size = Integer.valueOf(size);
+        return clone;
+    }
+
     public Array(E... es) {
-        for (E e : es) {
-            super.addLast(e);
-        }
+        data = es;
+        size = es.length;
     }
 
     public void add(int index, E element) {

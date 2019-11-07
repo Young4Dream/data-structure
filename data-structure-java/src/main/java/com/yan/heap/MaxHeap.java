@@ -8,7 +8,7 @@ import com.yan.array.dynamic.Array;
  * 2019/11/5 0005 09:40
  */
 @SuppressWarnings("all")
-public class MaxHeap<E extends Comparable<E>> {
+public class MaxHeap<E extends Comparable<E>> implements Cloneable {
     private Array<E> data;
 
     public MaxHeap(int capacity) {
@@ -17,6 +17,25 @@ public class MaxHeap<E extends Comparable<E>> {
 
     public MaxHeap() {
         data = new Array<>();
+    }
+
+    // heapify
+    public MaxHeap(E... es) {
+        data = new Array<>(es);
+        for (int i = parent(size() - 1); i >= 0; i--) {
+            siftDown(i);
+        }
+    }
+
+    protected Object[] getData() {
+        return this.data.getData();
+    }
+
+    @Override
+    protected MaxHeap<E> clone() throws CloneNotSupportedException {
+        MaxHeap<E> clone = (MaxHeap<E>)super.clone();
+        clone.data = this.data.clone();
+        return clone;
     }
 
     public int size() {
