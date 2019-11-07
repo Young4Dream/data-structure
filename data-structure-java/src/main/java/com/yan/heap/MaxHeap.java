@@ -2,6 +2,8 @@ package com.yan.heap;
 
 import com.yan.array.dynamic.Array;
 
+import java.util.Comparator;
+
 /**
  * @author Administrator
  * @since 1.0.0
@@ -10,6 +12,7 @@ import com.yan.array.dynamic.Array;
 @SuppressWarnings("all")
 public class MaxHeap<E extends Comparable<E>> implements Cloneable {
     private Array<E> data;
+    private Comparator<E> comparator = E::compareTo;
 
     public MaxHeap(int capacity) {
         data = new Array<>(capacity);
@@ -19,8 +22,21 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
         data = new Array<>();
     }
 
+    public MaxHeap(Comparator<E> comparator) {
+        this();
+        if (null != comparator) {
+            this.comparator = comparator;
+        }
+    }
+
     // heapify
     public MaxHeap(E... es) {
+        this(null, es);
+    }
+
+    // heapify
+    public MaxHeap(Comparator<E> comparator, E... es) {
+        this(comparator);
         data = new Array<>(es);
         for (int i = parent(size() - 1); i >= 0; i--) {
             siftDown(i);
@@ -33,7 +49,7 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
 
     @Override
     protected MaxHeap<E> clone() throws CloneNotSupportedException {
-        MaxHeap<E> clone = (MaxHeap<E>)super.clone();
+        MaxHeap<E> clone = (MaxHeap<E>) super.clone();
         clone.data = this.data.clone();
         return clone;
     }
@@ -96,7 +112,7 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
     }
 
     private void siftUp(int i) {
-        while (i > 0 && data.get(parent(i)).compareTo(data.get(i)) < 0) {
+        while (i > 0 && comparator.compare(data.get(parent(i)), data.get(i)) < 0) {
             data.swap(i, parent(i));
             i = parent(i);
         }
@@ -133,7 +149,8 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
             throw new IllegalArgumentException("Can not find Max Child when no children.");
         }
         int max = left(index);
-        if (hasRight(index) && get(right(index)).compareTo(get(max)) > 0) {
+
+        if (hasRight(index) && comparator.compare(get(right(index)), get(max)) > 0) {
             max = right(index);
         }
         return max;
@@ -142,7 +159,7 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
     private void siftDown(int index) {
         while (hasChild(index)) {
             int max = maxChild(index);
-            if (get(max).compareTo(get(index)) <= 0) {
+            if (comparator.compare(get(max), get(index)) <= 0) {
                 break;
             }
             data.swap(max, index);
