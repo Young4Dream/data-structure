@@ -1,6 +1,6 @@
 package com.yan.set;
 
-import com.yan.tree.binary.BST;
+import com.yan.tree.BST;
 
 /**
  * @author Administrator

@@ -9,6 +9,7 @@ import java.util.Comparator;
  * @since 1.0.0
  * 2019/11/7 0007 16:17
  */
+@SuppressWarnings("all")
 public class PriorityQueue<E extends Comparable<E>> implements Queue<E> {
     private MaxHeap<E> maxHeap;
 

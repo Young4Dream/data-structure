@@ -1,4 +1,4 @@
-package com.yan.tree.binary;
+package com.yan.tree;
 
 import java.util.Stack;
 
@@ -13,36 +13,6 @@ import java.util.Stack;
 public class BST<E extends Comparable<E>> {
     private Node root;
     private int size;
-
-    public static void main(String[] args) {
-        BST<Integer> integerBST = new BST<>();
-        integerBST.add(8);
-        integerBST.add(6);
-        integerBST.add(11);
-        integerBST.add(3);
-        integerBST.add(7);
-        integerBST.add(9);
-        integerBST.add(12);
-        ///////////////////
-        //       8       //
-        //     /   \     //
-        //   6      11   //
-        //  / \    /  \  //
-        //3    7  9    12//
-        ///////////////////
-        integerBST.contains(9);
-        //8,6,3,7,11,9,12
-        integerBST.preOrderNR();
-        //3,6,7,8,9,11,12
-        integerBST.midOrder();
-        //3,7,6,9,12,11,8
-        integerBST.postOrder();
-        System.out.println(integerBST.removeMin());
-        System.out.println(integerBST.contains(3));
-        System.out.println(integerBST.contains(12));
-        System.out.println(integerBST.removeMin());
-        integerBST.remove(8);
-    }
 
     public int size() {
         return size;
@@ -181,6 +151,7 @@ public class BST<E extends Comparable<E>> {
      * 前序遍历的非递归实现
      */
     public void preOrderNR() {
+        System.out.println("============前序遍历开始============");
         Stack<Node> stack = new Stack<>();
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -191,6 +162,7 @@ public class BST<E extends Comparable<E>> {
             if (null != node.left)
                 stack.push(node.left);
         }
+        System.out.println("============前序遍历结束============");
     }
 
     public void midOrder() {
