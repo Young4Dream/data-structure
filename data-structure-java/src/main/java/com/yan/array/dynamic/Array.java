@@ -15,17 +15,17 @@ public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneabl
         super();
     }
 
-    @Override
-    public Array<E> clone() throws CloneNotSupportedException {
-        Array<E> clone = (Array<E>)super.clone();
-        clone.data = this.data.clone();
-        clone.size = Integer.valueOf(size);
-        return clone;
-    }
-
     public Array(E... es) {
         data = es;
         size = es.length;
+    }
+
+    @Override
+    public Array<E> clone() throws CloneNotSupportedException {
+        Array<E> clone = (Array<E>) super.clone();
+        clone.data = this.data.clone();
+        clone.size = Integer.valueOf(size);
+        return clone;
     }
 
     public void add(int index, E element) {
