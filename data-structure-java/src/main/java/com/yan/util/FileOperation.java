@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +26,7 @@ public class FileOperation {
             File file = new File(filename);
             if (file.exists()) {
                 FileInputStream fis = new FileInputStream(file);
-                scanner = new Scanner(new BufferedInputStream(fis), StandardCharsets.UTF_8);
+                scanner = new Scanner(new BufferedInputStream(fis));
                 scanner.useLocale(Locale.ENGLISH);
             } else
                 return words;

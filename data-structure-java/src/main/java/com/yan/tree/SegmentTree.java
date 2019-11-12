@@ -12,14 +12,27 @@ import java.util.function.BinaryOperator;
 public class SegmentTree<E> {
     private E[] tree;
     private E[] data;
-    private BinaryOperator<E> operator;
+    private BinaryOperator<E> merger;
 
-    public SegmentTree(BinaryOperator<E> operator, E... arr) {
-        this.operator = operator;
+    public SegmentTree(BinaryOperator<E> merger, E... arr) {
+        this.merger = merger;
         data = arr.clone();
         // enough capacity
         tree = (E[]) new Object[arr.length << 1 << 1];
         buildSegmentTree(0, 0, size() - 1);
+    }
+
+    private void buildSegmentTree(int index, int l, int r) {
+        if (l == r) {
+            tree[index] = data[l];
+            return;
+        }
+        int left = left(index);
+        int right = right(index);
+        int mid = l + (r - l) / 2;
+        buildSegmentTree(left, l, mid);
+        buildSegmentTree(right, mid + 1, r);
+        tree[index] = merger.apply(tree[left], tree[right]);
     }
 
     /**
@@ -32,11 +45,15 @@ public class SegmentTree<E> {
     }
 
     public E query(int left, int right) {
+        if (left < 0 || left >= data.length ||
+                right < 0 || right >= data.length || left > right)
+            throw new IllegalArgumentException("Index is illegal.");
         return query(0, 0, size() - 1, left, right);
     }
 
     /**
-     * 根据左右范围索引值(lq,rq)递归查询
+     * 根据左右范围索引值[lq,rq]递归查询
+     * [l,r]肯定是包含[lq,rq]的
      *
      * @param index 当前片段树索引
      * @param l     当前片段树索引下支持的最小索引值
@@ -61,33 +78,22 @@ public class SegmentTree<E> {
         // 左子树融合结果
         E lr = query(lc, l, mid, lq, mid);
         // 右子树融合结果
-        E rr = query(rc, mid + 1, rc, mid + 1, rq);
-        return operator.apply(lr, rr);
+        E rr = query(rc, mid + 1, r, mid + 1, rq);
+        return merger.apply(lr, rr);
     }
 
     public E get(int index) {
+        if (index < 0 || index >= data.length)
+            throw new IllegalArgumentException("Index is illegal.");
         return data[index];
     }
 
     private int left(int index) {
-        return index << 1 + 1;
+        return (index << 1) + 1;
     }
 
     private int right(int index) {
         return left(index) + 1;
-    }
-
-    private void buildSegmentTree(int index, int l, int r) {
-        if (l == r) {
-            tree[index] = data[l];
-            return;
-        }
-        int left = left(index);
-        int right = right(index);
-        int mid = mid(l, r);
-        buildSegmentTree(left, l, mid);
-        buildSegmentTree(right, mid + 1, r);
-        tree[index] = operator.apply(tree[left], tree[right]);
     }
 
     private int mid(int l, int r) {
@@ -97,7 +103,7 @@ public class SegmentTree<E> {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", SegmentTree.class.getSimpleName() + "[", "]");
-        for (E e : data) stringJoiner.add(String.valueOf(e));
+        for (E e : tree) stringJoiner.add(String.valueOf(e));
         return stringJoiner.toString();
     }
 }
