@@ -1,14 +1,19 @@
 package com.yan.array.generic;
 
-import lombok.Data;
-
 import java.util.StringJoiner;
 
-@Data
 @SuppressWarnings("all")
 public class Array<T> {
     protected T[] data;
     protected int size;
+
+    public T[] getData() {
+        return data;
+    }
+
+    public int getSize() {
+        return size;
+    }
 
     public Array(int capacity) {
         data = (T[]) new Object[capacity];

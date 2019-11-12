@@ -100,6 +100,31 @@ public class SegmentTree<E> {
         return l + (r - l) / 2;
     }
 
+    public void set(int index, E e) {
+        set(0, 0, size() - 1, index, e);
+    }
+
+    public void setByRebuild(int index, E e) {
+        data[index] = e;
+        buildSegmentTree(0, 0, size() - 1);
+    }
+
+    private void set(int treeIndex, int l, int r, int index, E e) {
+        if (l == r) {
+            tree[treeIndex] = e;
+            return;
+        }
+        int mid = mid(l, r);
+        int left = left(treeIndex);
+        int right = right(treeIndex);
+        if (index > mid) {
+            set(right, mid + 1, r, index, e);
+        } else {
+            set(left, l, mid, index, e);
+        }
+        tree[treeIndex] = merger.apply(tree[left], tree[right]);
+    }
+
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", SegmentTree.class.getSimpleName() + "[", "]");
