@@ -17,7 +17,11 @@ public class Trie {
         size = 0;
     }
 
-    public void add(String word) {
+    protected Node getRoot() {
+        return root;
+    }
+
+    public void add(CharSequence word) {
         Node cur = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -30,7 +34,19 @@ public class Trie {
         }
     }
 
-    public boolean contains(String word) {
+    public boolean startsWith(CharSequence prefix) {
+        Node cur = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            if (cur.next.get(c) == null) {
+                return false;
+            }
+            cur = cur.next.get(c);
+        }
+        return true;
+    }
+
+    public boolean contains(CharSequence word) {
         Node cur = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -42,7 +58,7 @@ public class Trie {
         return cur.isWord;
     }
 
-    private class Node {
+    protected class Node {
         public boolean isWord;
         public TreeMap<Character, Node> next;
 
