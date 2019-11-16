@@ -3,7 +3,7 @@ package com.yan.map;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("all")
+
 public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
     private Node root;
     private int size;
@@ -23,7 +23,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         if (node == null) {
             return null;
         }
-        if (k.compareTo(node.key) > 0) {
+        if (k.compareTo(node.key) < 0) {
             node.left = remove(node.left, k);
             return node;
         } else if (k.compareTo(node.key) > 0) {
@@ -46,7 +46,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         size++;
         successor.left = node.left;
         node.left = node.right = null;
-        node = null;
         return successor;
     }
 
@@ -117,7 +116,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
             size++;
             return new Node(k, v);
         }
-        Comparator<K> kComparator = (l, r) -> l.compareTo(r);
+        Comparator<K> kComparator = Comparator.naturalOrder();
         if (Objects.compare(k, node.key, kComparator) < 0) {
             node.left = add(node.left, k, v);
         } else if (Objects.compare(k, node.key, kComparator) > 0) {
@@ -128,8 +127,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node;
     }
 
+    @SuppressWarnings("all")
     private class Node {
-        public K key;
+        K key;
         public V value;
         public Node left, right;
 
