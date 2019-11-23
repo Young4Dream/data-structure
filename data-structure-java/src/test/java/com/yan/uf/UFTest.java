@@ -26,7 +26,7 @@ public class UFTest {
     @Before
     public void before() {
         int low_size = 100000;
-        int high_size = 10000000;
+        int high_size = 1000000;
         ufds1 = new UFDS01(low_size);
         ufds2 = new UFDS02(low_size);
         ufds3 = new UFDS03(low_size);

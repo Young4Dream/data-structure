@@ -1,7 +1,6 @@
 package com.yan.tree;
 
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Administrator
@@ -9,27 +8,21 @@ import java.util.Objects;
  * 2019/11/16 15:34
  */
 public class AVL<K extends Comparable<K>, V> {
-    private Node root;
+    private Node<K, V> root;
     private int size;
 
-
-    public void add(K k, V v) {
-        root = add(root, k, v);
-    }
-
-    private int getHeight(Node node) {
-        if (null == node) {
+    private static int getHeight(Node node) {
+        if (null == node)
             return 0;
-        }
         return node.height;
     }
 
     public V remove(K k) {
-        Node remove = remove(root, k);
+        Node<K, V> remove = remove(root, k);
         return remove == null ? null : remove.value;
     }
 
-    public Node remove(Node node, K k) {
+    public Node<K, V> remove(Node<K, V> node, K k) {
         if (node == null) {
             return null;
         }
@@ -42,16 +35,16 @@ public class AVL<K extends Comparable<K>, V> {
         }
         size--;
         if (node.left == null) {
-            Node right = node.right;
+            Node<K, V> right = node.right;
             node.right = null;
             return right;
         }
         if (node.right == null) {
-            Node left = node.left;
+            Node<K, V> left = node.left;
             node.left = null;
             return left;
         }
-        Node successor = minimum(node.right);
+        Node<K, V> successor = minimum(node.right);
         successor.right = removeMin(node.right);
         size++;
         successor.left = node.left;
@@ -59,12 +52,12 @@ public class AVL<K extends Comparable<K>, V> {
         return successor;
     }
 
-    private Node removeMin(Node node) {
+    private Node<K, V> removeMin(Node<K, V> node) {
         if (null == node) {
             return null;
         }
         if (node.left == null) {
-            Node rN = node.right;
+            Node<K, V> rN = node.right;
             node.right = null;
             size--;
             return rN;
@@ -73,7 +66,7 @@ public class AVL<K extends Comparable<K>, V> {
         return node;
     }
 
-    private Node minimum(Node node) {
+    private Node<K, V> minimum(Node<K, V> node) {
         if (node == null) {
             return null;
         }
@@ -83,12 +76,12 @@ public class AVL<K extends Comparable<K>, V> {
         return minimum(node.left);
     }
 
-
+    @SuppressWarnings("all")
     public boolean containsKey(K k) {
         return getNode(root, k) != null;
     }
 
-    private Node getNode(Node node, K k) {
+    private Node<K, V> getNode(Node<K, V> node, K k) {
         if (null == node) {
             return null;
         }
@@ -101,30 +94,49 @@ public class AVL<K extends Comparable<K>, V> {
         return getNode(node.right, k);
     }
 
-
     public V get(K k) {
-        Node node = getNode(root, k);
+        Node<K, V> node = getNode(root, k);
         return null == node ? null : node.value;
     }
 
-
     public void set(K k, V v) {
-        Node node = getNode(root, k);
+        Node<K, V> node = getNode(root, k);
         if (null == node) {
             throw new IllegalArgumentException(k + " doesn't exist!");
         }
         node.value = v;
     }
 
-
-    public int size() {
-        return size;
+    public void add(K k, V v) {
+        root = add(root, k, v);
     }
 
-    public Node add(Node node, K k, V v) {
+    @SuppressWarnings("all")
+    public boolean isBalanced() {
+        return root == null || root.isBalanced();
+    }
+
+
+    @SuppressWarnings("all")
+    public Set<K> keySet() {
+        TreeSet<K> ks = new TreeSet<>();
+        keySet(root, ks);
+        return ks;
+    }
+
+    private void keySet(Node<K, V> node, TreeSet<K> ks) {
+        if (null == node) {
+            return;
+        }
+        ks.add(node.key);
+        keySet(node.left, ks);
+        keySet(node.right, ks);
+    }
+
+    public Node<K, V> add(Node<K, V> node, K k, V v) {
         if (node == null) {
             size++;
-            return new Node(k, v);
+            return new Node<>(k, v);
         }
         Comparator<K> kComparator = Comparator.naturalOrder();
         if (Objects.compare(k, node.key, kComparator) < 0) {
@@ -134,44 +146,99 @@ public class AVL<K extends Comparable<K>, V> {
         } else {
             node.value = v;
         }
+        // reset height because which child added finally is not sure
         node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
-        return node;
+        return node.balance();
     }
 
-    private int getBalanceFactor(Node node) {
-        if (node == null) {
-            return 0;
-        }
-        return getHeight(node.left) - getHeight(node.right);
+    public int size() {
+        return size;
     }
 
     @SuppressWarnings("all")
-    private class Node {
+    static class Node<K, V> {
         public K key;
         public V value;
         public int height;
-        public Node left, right;
+        public Node<K, V> left, right;
 
-        public Node(K key, V value, Node next) {
+        public Node(K key, V value) {
             this.key = key;
             this.value = value;
             this.height = 1;
-            if (null == next) {
-                return;
-            }
-            if (key.compareTo(next.key) > 0) {
-                left = next;
-            } else if (key.compareTo(next.key) < 0) {
-                right = next;
-            }
         }
 
-        public Node(K key, V value) {
-            this(key, value, null);
+        private boolean isBalanced(Node node) {
+            if (node == null)
+                return true;
+            int balanceFactor = node.getBalanceFactor();
+            if (Math.abs(balanceFactor) > 1)
+                return false;
+            return isBalanced(node.left) && isBalanced(node.right);
         }
 
-        public Node() {
-            this(null, null);
+        public Node<K, V> balance() {
+            int balanceFactor = getBalanceFactor();
+            if (balanceFactor > 1 && left.getBalanceFactor() >= 0) {
+                return rightRotate();
+            }
+            if (balanceFactor < -1 && right.getBalanceFactor() <= 0) {
+                return leftRotate();
+            }
+            if (balanceFactor > 1 && left.getBalanceFactor() < 0) {
+                left = left.leftRotate();
+                return rightRotate();
+            }
+            if (balanceFactor < -1 && right.getBalanceFactor() > 0) {
+                right = right.rightRotate();
+                return leftRotate();
+            }
+            return this;
+        }
+
+        private int getBalanceFactor() {
+            int leftHight = left == null ? 0 : left.height;
+            int rightHight = right == null ? 0 : right.height;
+            return leftHight - rightHight;
+        }
+
+        public Node<K, V> rightRotate() {
+            Node x = this.left;
+            Node t = x.right;
+
+            // 向右旋转过程
+            x.right = this;
+            this.left = t;
+
+            // 更新height
+            this.height = Math.max(getHeight(this.left), getHeight(this.right)) + 1;
+            x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+
+            return x;
+        }
+
+        public Node<K, V> leftRotate() {
+            Node x = this.right;
+            Node t = x.left;
+            x.left = this;
+            this.right = t;
+            this.height = Math.max(getHeight(this.left), getHeight(this.right)) + 1;
+            x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+            return x;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", Node.class.getSimpleName() + "[", "]")
+                    .add("key=" + key)
+                    .add("height=" + height)
+                    .add("left=" + (left == null ? null : "[key=" + left.key + ",height=" + left.height + "]"))
+                    .add("right=" + (right == null ? null : "[key=" + right.key + ",height=" + right.height + "]"))
+                    .toString();
+        }
+
+        public boolean isBalanced() {
+            return isBalanced(this);
         }
     }
 
