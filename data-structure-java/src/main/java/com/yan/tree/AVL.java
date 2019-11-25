@@ -28,28 +28,28 @@ public class AVL<K extends Comparable<K>, V> {
         }
         if (k.compareTo(node.key) < 0) {
             node.left = remove(node.left, k);
-            return node;
+            return node.balance();
         } else if (k.compareTo(node.key) > 0) {
             node.right = remove(node.right, k);
-            return node;
+            return node.balance();
         }
         size--;
         if (node.left == null) {
             Node<K, V> right = node.right;
             node.right = null;
-            return right;
+            return right.balance();
         }
         if (node.right == null) {
             Node<K, V> left = node.left;
             node.left = null;
-            return left;
+            return left.balance();
         }
         Node<K, V> successor = minimum(node.right);
         successor.right = removeMin(node.right);
         size++;
         successor.left = node.left;
         node.left = node.right = null;
-        return successor;
+        return successor.balance();
     }
 
     private Node<K, V> removeMin(Node<K, V> node) {
@@ -60,10 +60,10 @@ public class AVL<K extends Comparable<K>, V> {
             Node<K, V> rN = node.right;
             node.right = null;
             size--;
-            return rN;
+            return rN == null ? null : rN.balance();
         }
         node.left = removeMin(node.left);
-        return node;
+        return node.balance();
     }
 
     private Node<K, V> minimum(Node<K, V> node) {
@@ -71,9 +71,9 @@ public class AVL<K extends Comparable<K>, V> {
             return null;
         }
         if (node.left == null) {
-            return node;
+            return node.balance();
         }
-        return minimum(node.left);
+        return minimum(node.left).balance();
     }
 
     @SuppressWarnings("all")

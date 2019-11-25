@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Administrator
@@ -58,6 +59,18 @@ public class AVLTest extends AVL<String, Integer> {
         String random_key = strings.stream().skip(skip).findAny().orElseThrow(RuntimeException::new);
 //        System.out.println("random_key:" + random_key);
         assertEquals(get(random_key), map.get(random_key));
+    }
+
+    @Test
+    public void test_remove(){
+        map.remove("are");
+        map.remove("often");
+        remove("are");
+        remove("often");
+
+        assertEquals(map.getSize(), size());
+        assertNull(get("are"));
+        test_random_key_value();
     }
 
 }
