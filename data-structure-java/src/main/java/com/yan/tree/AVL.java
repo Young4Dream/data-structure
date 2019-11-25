@@ -18,8 +18,9 @@ public class AVL<K extends Comparable<K>, V> {
     }
 
     public V remove(K k) {
-        Node<K, V> remove = remove(root, k);
-        return remove == null ? null : remove.value;
+        Node<K, V> node = getNode(root, k);
+        root = remove(root, k);
+        return node == null ? null : node.value;
     }
 
     public Node<K, V> remove(Node<K, V> node, K k) {
@@ -37,19 +38,23 @@ public class AVL<K extends Comparable<K>, V> {
         if (node.left == null) {
             Node<K, V> right = node.right;
             node.right = null;
-            return right.balance();
+            return balance(right);
         }
         if (node.right == null) {
             Node<K, V> left = node.left;
             node.left = null;
-            return left.balance();
+            return balance(left);
         }
         Node<K, V> successor = minimum(node.right);
-        successor.right = removeMin(node.right);
+        successor.right = remove(node.right, successor.key);
         size++;
         successor.left = node.left;
         node.left = node.right = null;
-        return successor.balance();
+        return balance(successor);
+    }
+
+    private Node<K, V> balance(Node<K, V> node) {
+        return node == null ? null : node.balance();
     }
 
     private Node<K, V> removeMin(Node<K, V> node) {
@@ -60,7 +65,7 @@ public class AVL<K extends Comparable<K>, V> {
             Node<K, V> rN = node.right;
             node.right = null;
             size--;
-            return rN == null ? null : rN.balance();
+            return balance(rN);
         }
         node.left = removeMin(node.left);
         return node.balance();
@@ -73,7 +78,7 @@ public class AVL<K extends Comparable<K>, V> {
         if (node.left == null) {
             return node.balance();
         }
-        return minimum(node.left).balance();
+        return balance(minimum(node.left));
     }
 
     @SuppressWarnings("all")
@@ -147,7 +152,7 @@ public class AVL<K extends Comparable<K>, V> {
             node.value = v;
         }
         // reset height because which child added finally is not sure
-        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+//        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
         return node.balance();
     }
 
@@ -177,7 +182,12 @@ public class AVL<K extends Comparable<K>, V> {
             return isBalanced(node.left) && isBalanced(node.right);
         }
 
+        private void refreshHight() {
+            height = 1 + Math.max(getHeight(left), getHeight(right));
+        }
+
         public Node<K, V> balance() {
+            refreshHight();
             int balanceFactor = getBalanceFactor();
             if (balanceFactor > 1 && left.getBalanceFactor() >= 0) {
                 return rightRotate();

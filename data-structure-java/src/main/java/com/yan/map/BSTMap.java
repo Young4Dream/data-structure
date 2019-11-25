@@ -15,7 +15,8 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public V remove(K k) {
-        Node remove = remove(root, k);
+        Node remove = getNode(root, k);
+        root = remove(root, k);
         return remove == null ? null : remove.value;
     }
 

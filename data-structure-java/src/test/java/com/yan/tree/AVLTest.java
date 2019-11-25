@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -62,15 +63,26 @@ public class AVLTest extends AVL<String, Integer> {
     }
 
     @Test
-    public void test_remove(){
-        map.remove("are");
-        map.remove("often");
-        remove("are");
-        remove("often");
-
+    public void test_remove() {
+        Set<String> strings = keySet();
+        int size = strings.size();
+        int skip = (int) (Math.random() * size);
+        int limit = (int) (Math.random() * (size - skip));
+//        skip = 3278;
+//        limit = 1;
+        assertEquals(map.get("is"), get("is"));
+        strings.stream().skip(skip).limit(limit).forEach(k -> {
+//            System.out.println("key:" + k);
+            map.remove(k);
+            remove(k);
+            assertNull(get(k));
+        });
         assertEquals(map.getSize(), size());
-        assertNull(get("are"));
-        test_random_key_value();
+        assertEquals(key_set_to_string(map.keySet()), key_set_to_string(keySet()));
+    }
+
+    private String key_set_to_string(Set<String> keySet) {
+        return keySet.stream().sorted().collect(Collectors.joining());
     }
 
 }
