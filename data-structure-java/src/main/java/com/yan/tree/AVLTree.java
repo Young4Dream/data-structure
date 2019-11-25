@@ -7,7 +7,7 @@ import java.util.*;
  * @since 1.0.0
  * 2019/11/16 15:34
  */
-public class AVL<K extends Comparable<K>, V> {
+public class AVLTree<K extends Comparable<K>, V> {
     private Node<K, V> root;
     private int size;
 

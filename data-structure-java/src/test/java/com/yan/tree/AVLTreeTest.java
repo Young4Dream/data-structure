@@ -1,6 +1,5 @@
 package com.yan.tree;
 
-import com.yan.tree.teacher.AVLTree;
 import com.yan.util.FileOperation;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +16,8 @@ import static org.junit.Assert.assertNull;
  * @since 1.0.0
  * 2019/11/20 12:12
  */
-public class AVLTest extends AVL<String, Integer> {
-    private AVLTree<String, Integer> map = new AVLTree<>();
+public class AVLTreeTest extends AVLTree<String, Integer> {
+    private com.yan.tree.teacher.AVLTree<String, Integer> map = new com.yan.tree.teacher.AVLTree<>();
 
     @Before
     public void setUp() {
