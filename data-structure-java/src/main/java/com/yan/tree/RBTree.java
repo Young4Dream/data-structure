@@ -1,12 +1,16 @@
-package com.yan.tree.red_black;
+package com.yan.tree;
 
-import java.util.StringJoiner;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Administrator
  * @since 1.0.0
  * 2019/11/25 16:58
  */
+@SuppressWarnings("all")
 public class RBTree<K extends Comparable<K>, V> {
 
     private Node<K, V> root;
@@ -18,8 +22,42 @@ public class RBTree<K extends Comparable<K>, V> {
         return node.height;
     }
 
-    private static boolean isRed(Node node) {
+    public static boolean isRed(Node node) {
         return node == null ? Node.BLACK : node.color;
+    }
+
+    public V get(K k) {
+        Node<K, V> node = getNode(root, k);
+        if (null == node) {
+            return null;
+        }
+        return node.value;
+    }
+
+    public void set(K k, V v) {
+        Node<K, V> node = getNode(root, k);
+        if (null == node) {
+            add(k, v);
+            return;
+        }
+        node.value = v;
+    }
+
+    public boolean containsKey(K k) {
+        return null != getNode(root, k);
+    }
+    // 返回以node为根节点的二分搜索树中，key所在的节点
+    private Node<K, V> getNode(Node<K, V> node, K k) {
+        if (node == null) {
+            return null;
+        }
+        if (k.compareTo(node.key) == 0) {
+            return node;
+        }
+        if (k.compareTo(node.key) > 0) {
+            return getNode(node.right, k);
+        }
+        return getNode(node.left, k);
     }
 
     public void add(K k, V v) {
@@ -46,6 +84,22 @@ public class RBTree<K extends Comparable<K>, V> {
         return node.refresh();
     }
 
+    public Set<Node<K, V>> nodeSet() {
+        Set<Node<K, V>> set = new TreeSet<>(Comparator.comparing(n -> n.key));
+        fillSet(root, set);
+        return set;
+    }
+
+    private void fillSet(Node<K, V> node, Set<Node<K, V>> set) {
+        if (node == null) {
+            return;
+        }
+        fillSet(node.left, set);
+        set.add(node);
+        fillSet(node.right, set);
+    }
+
+
     @SuppressWarnings("all")
     static class Node<K extends Comparable<K>, V> {
         private static final Boolean RED = true;
@@ -60,15 +114,7 @@ public class RBTree<K extends Comparable<K>, V> {
             this.key = key;
             this.value = value;
             this.height = 1;
-        }
-
-        private boolean isBalanced(Node node) {
-            if (node == null)
-                return true;
-            int balanceFactor = node.getBalanceFactor();
-            if (Math.abs(balanceFactor) > 1)
-                return false;
-            return isBalanced(node.left) && isBalanced(node.right);
+            this.color = RED;
         }
 
         /**
@@ -82,7 +128,7 @@ public class RBTree<K extends Comparable<K>, V> {
             if (isRed(self.left) && isRed(self.left.left)) {
                 self = self.rightRotate();
             }
-            if (isRed(self.right) && !isRed(self.left)) {
+            if (!isRed(self.left) && isRed(self.right)) {
                 self = self.leftRotate();
             }
             if (isRed(self.left) && isRed(self.right)) {
@@ -98,15 +144,10 @@ public class RBTree<K extends Comparable<K>, V> {
             this.left.color = this.right.color = BLACK;
         }
 
-        private int getBalanceFactor() {
-            int leftHight = left == null ? 0 : left.height;
-            int rightHight = right == null ? 0 : right.height;
-            return leftHight - rightHight;
-        }
-
         public Node<K, V> rightRotate() {
-            Node x = this.left;
-            Node t = x.right;
+            Node<K, V> x = left;
+            left = x.right;
+            x.right = this;
             x.color = color;
             color = RED;
             return x;
@@ -115,23 +156,10 @@ public class RBTree<K extends Comparable<K>, V> {
         public Node<K, V> leftRotate() {
             Node<K, V> x = right;
             right = x.left;
+            x.left = this;
             x.color = color;
             color = RED;
             return x;
-        }
-
-        @Override
-        public String toString() {
-            return new StringJoiner(", ", Node.class.getSimpleName() + "[", "]")
-                    .add("key=" + key)
-                    .add("height=" + height)
-                    .add("left=" + (left == null ? null : "[key=" + left.key + ",height=" + left.height + "]"))
-                    .add("right=" + (right == null ? null : "[key=" + right.key + ",height=" + right.height + "]"))
-                    .toString();
-        }
-
-        public boolean isBalanced() {
-            return isBalanced(this);
         }
     }
 }
