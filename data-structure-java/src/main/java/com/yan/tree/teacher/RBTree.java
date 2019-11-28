@@ -2,10 +2,7 @@ package com.yan.tree.teacher;
 
 import com.yan.util.FileOperation;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class RBTree<K extends Comparable<K>, V> {
 
@@ -97,7 +94,7 @@ public class RBTree<K extends Comparable<K>, V> {
     }
 
     public Set<Node> nodeSet() {
-        Set<Node> set = new TreeSet<>(Comparator.comparing(n -> n.key));
+        Set<Node> set = new LinkedHashSet<>();
         fillSet(root, set);
         return set;
     }

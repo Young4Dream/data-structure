@@ -1,9 +1,6 @@
 package com.yan.tree;
 
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Administrator
@@ -85,7 +82,7 @@ public class RBTree<K extends Comparable<K>, V> {
     }
 
     public Set<Node<K, V>> nodeSet() {
-        Set<Node<K, V>> set = new TreeSet<>(Comparator.comparing(n -> n.key));
+        Set<Node<K, V>> set = new LinkedHashSet<>();
         fillSet(root, set);
         return set;
     }
@@ -148,6 +145,7 @@ public class RBTree<K extends Comparable<K>, V> {
             Node<K, V> x = left;
             left = x.right;
             x.right = this;
+            // 其实可以直接赋值为BLACK
             x.color = color;
             color = RED;
             return x;
