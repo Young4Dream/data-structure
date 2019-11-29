@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Administrator
@@ -23,9 +22,9 @@ public class RBTreeTest extends RBTree<String, Integer> {
     public void setUp() throws Exception {
         List<String> words = FileOperation.readFile("pride-and-prejudice.txt");
         t = new com.yan.tree.teacher.RBTree<>();
+//        PrintStream stdPrintStream = System.out;
 //        String inputStream = Objects.requireNonNull(RBTree.class.getClassLoader().getResource("err.log")).getPath();
 //        System.setOut(new PrintStream(new File(inputStream)));
-//        System.out.println();
         for (String word : words) {
 //            System.out.append(word).append("\n");
             Assert.assertEquals(t.contains(word), containsKey(word));
@@ -37,6 +36,8 @@ public class RBTreeTest extends RBTree<String, Integer> {
             t.add(word, 1);
             add(word, 1);
         }
+//        System.setOut(stdPrintStream);
+//        System.out.println("add end!");
     }
 
     @After

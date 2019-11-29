@@ -1,5 +1,7 @@
 package com.yan.leetcode.linked;
 
+import java.util.StringJoiner;
+
 /**
  * @author Administrator
  * @since 1.0.0
@@ -20,5 +22,14 @@ class ListNode {
         for (int i : ints) {
             prev = prev.next = new ListNode(i);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]").add(String.valueOf(val));
+        for (ListNode next = this.next; next != null; next = next.next) {
+            stringJoiner.add(String.valueOf(next.val));
+        }
+        return stringJoiner.toString();
     }
 }
