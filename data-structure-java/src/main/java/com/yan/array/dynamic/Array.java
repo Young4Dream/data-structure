@@ -20,6 +20,10 @@ public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneabl
         size = es.length;
     }
 
+    public E[] toArray() {
+        return data;
+    }
+
     @Override
     public Array<E> clone() throws CloneNotSupportedException {
         Array<E> clone = (Array<E>) super.clone();
