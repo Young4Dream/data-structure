@@ -27,7 +27,7 @@ public class BiHeap<E extends Comparable<E>> {
     }
 
     @SuppressWarnings("all")
-    public BiHeap(Comparator<E> comparator) {
+    public BiHeap(Comparator<? super E> comparator) {
         this();
         if (comparator != null) {
             this.comparator = comparator;
@@ -35,7 +35,7 @@ public class BiHeap<E extends Comparable<E>> {
     }
 
     @SuppressWarnings("all")
-    public BiHeap(Comparator<E> comparator, E... es) {
+    public BiHeap(Comparator<? super E> comparator, E... es) {
         this(comparator);
         if (es != null) {
             array = new Array<>(es).removeIf(Objects::isNull);
