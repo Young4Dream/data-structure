@@ -1,13 +1,7 @@
 package com.yan.util;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 // 文件相关操作
 public class FileOperation {
@@ -20,26 +14,14 @@ public class FileOperation {
         }
 
         // 文件读取
-        Scanner scanner;
-
-        try {
-            File file = new File(filename);
-            if (file.exists()) {
-                FileInputStream fis = new FileInputStream(file);
-                scanner = new Scanner(new BufferedInputStream(fis));
-                scanner.useLocale(Locale.ENGLISH);
-            } else
-                return words;
-        } catch (IOException ioe) {
-            System.out.println("Cannot open " + filename);
-            return words;
-        }
+        ClassLoader classLoader = FileOperation.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(filename);
+        Scanner scanner = new Scanner(new BufferedInputStream(Objects.requireNonNull(inputStream)));
 
         // 简单分词
         // 这个分词方式相对简陋, 没有考虑很多文本处理中的特殊问题
         // 在这里只做demo展示用
         if (scanner.hasNextLine()) {
-
             String contents = scanner.useDelimiter("\\A").next();
 
             int start = firstCharacterIndex(contents, 0);

@@ -23,7 +23,8 @@ public class TrieTest {
     @Test
     public void test() {
         trie.add("Hello World!");
-        System.out.println(trie);
+        System.out.println(trie.startsWith("A"));
+        System.out.println(trie.startsWith("H"));
     }
 
     @After

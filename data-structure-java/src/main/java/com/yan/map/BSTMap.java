@@ -3,9 +3,9 @@ package com.yan.map;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("all")
+
 public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
-    private Node root;
+    private Node<K, V> root;
     private int size;
 
     @Override
@@ -15,15 +15,16 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public V remove(K k) {
-        Node remove = remove(root, k);
+        Node<K, V> remove = getNode(root, k);
+        root = remove(root, k);
         return remove == null ? null : remove.value;
     }
 
-    public Node remove(Node node, K k) {
+    public Node<K, V> remove(Node<K, V> node, K k) {
         if (node == null) {
             return null;
         }
-        if (k.compareTo(node.key) > 0) {
+        if (k.compareTo(node.key) < 0) {
             node.left = remove(node.left, k);
             return node;
         } else if (k.compareTo(node.key) > 0) {
@@ -32,30 +33,29 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
         size--;
         if (node.left == null) {
-            Node right = node.right;
+            Node<K, V> right = node.right;
             node.right = null;
             return right;
         }
         if (node.right == null) {
-            Node left = node.left;
+            Node<K, V> left = node.left;
             node.left = null;
             return left;
         }
-        Node successor = minimum(node.right);
+        Node<K, V> successor = minimum(node.right);
         successor.right = removeMin(node.right);
         size++;
         successor.left = node.left;
         node.left = node.right = null;
-        node = null;
         return successor;
     }
 
-    private Node removeMin(Node node) {
+    private Node<K, V> removeMin(Node<K, V> node) {
         if (null == node) {
             return null;
         }
         if (node.left == null) {
-            Node rN = node.right;
+            Node<K, V> rN = node.right;
             node.right = null;
             size--;
             return rN;
@@ -64,7 +64,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node;
     }
 
-    private Node minimum(Node node) {
+    private Node<K, V> minimum(Node<K, V> node) {
         if (node == null) {
             return null;
         }
@@ -79,7 +79,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         return getNode(root, k) != null;
     }
 
-    private Node getNode(Node node, K k) {
+    private Node<K, V> getNode(Node<K, V> node, K k) {
         if (null == node) {
             return null;
         }
@@ -94,13 +94,13 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public V get(K k) {
-        Node node = getNode(root, k);
+        Node<K, V> node = getNode(root, k);
         return null == node ? null : node.value;
     }
 
     @Override
     public void set(K k, V v) {
-        Node node = getNode(root, k);
+        Node<K, V> node = getNode(root, k);
         if (null == node) {
             throw new IllegalArgumentException(k + " doesn't exist!");
         }
@@ -112,12 +112,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         return size;
     }
 
-    public Node add(Node node, K k, V v) {
+    public Node<K, V> add(Node<K, V> node, K k, V v) {
         if (node == null) {
             size++;
-            return new Node(k, v);
+            return new Node<>(k, v);
         }
-        Comparator<K> kComparator = (l, r) -> l.compareTo(r);
+        Comparator<K> kComparator = Comparator.naturalOrder();
         if (Objects.compare(k, node.key, kComparator) < 0) {
             node.left = add(node.left, k, v);
         } else if (Objects.compare(k, node.key, kComparator) > 0) {
@@ -128,30 +128,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node;
     }
 
-    private class Node {
-        public K key;
-        public V value;
-        public Node left, right;
+    private static class Node<K extends Comparable<K>, V> {
+        K key;
+        V value;
+        Node<K, V> left, right;
 
-        public Node(K key, V value, Node next) {
+        Node(K key, V value) {
             this.key = key;
             this.value = value;
-            if (null == next) {
-                return;
-            }
-            if (key.compareTo(next.key) > 0) {
-                left = next;
-            } else if (key.compareTo(next.key) < 0) {
-                right = next;
-            }
-        }
-
-        public Node(K key, V value) {
-            this(key, value, null);
-        }
-
-        public Node() {
-            this(null, null);
         }
     }
 }

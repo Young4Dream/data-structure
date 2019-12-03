@@ -27,8 +27,7 @@ public class BSTMapTest {
     @Test
     public void test() {
         @SuppressWarnings("all")
-        String path = this.getClass().getClassLoader().getResource("pride-and-prejudice.txt").getPath();
-        List<String> strings = FileOperation.readFile(path);
+        List<String> strings = FileOperation.readFile("pride-and-prejudice.txt");
         Assert.assertEquals(125901, strings.size());
         strings.forEach(s -> {
             Integer integer = map.get(s);
