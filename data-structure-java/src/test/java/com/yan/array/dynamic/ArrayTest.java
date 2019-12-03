@@ -54,4 +54,14 @@ public class ArrayTest {
         array.removeFirst();
         assertEquals(1, array.getSize());
     }
+
+    @Test
+    public void test_iterator(){
+        for (String s : array) {
+            System.out.println(s);
+        }
+        for (String s : array) {
+            System.out.println(s);
+        }
+    }
 }

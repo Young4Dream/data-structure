@@ -1,12 +1,16 @@
 package com.yan.array.dynamic;
 
+import java.util.Iterator;
+import java.util.function.Predicate;
+
 /**
  * @author Administrator
  * @since 1.0.0
  * 2019/9/30 0030 16:42
  */
 @SuppressWarnings("all")
-public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneable {
+public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneable, Iterable<E> {
+
     public Array(int capacity) {
         super(capacity);
     }
@@ -64,5 +68,32 @@ public class Array<E> extends com.yan.array.generic.Array<E> implements Cloneabl
         for (int i = 0; i < size; i++)
             newData[i] = data[i];
         data = newData;
+    }
+
+    public Array<E> removeIf(Predicate<E> predicate) {
+        for (int i = 0; i < data.length; i++) {
+            E datum = data[i];
+            if (predicate.test(datum)) {
+                remove(i);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            private int index;
+
+            @Override
+            public boolean hasNext() {
+                return index < getSize();
+            }
+
+            @Override
+            public E next() {
+                return get(index++);
+            }
+        };
     }
 }
