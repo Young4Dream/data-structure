@@ -1,6 +1,6 @@
 package com.yan.queue;
 
-import com.yan.heap.MaxHeap;
+import com.yan.heap.BiHeap;
 
 import java.util.Comparator;
 
@@ -11,35 +11,34 @@ import java.util.Comparator;
  */
 @SuppressWarnings("all")
 public class PriorityQueue<E extends Comparable<E>> implements Queue<E> {
-    private MaxHeap<E> maxHeap;
-
+    private BiHeap<E> biHeap;
     public PriorityQueue() {
         super();
-        maxHeap = new MaxHeap<>();
+        biHeap = new BiHeap<>();
     }
 
     public PriorityQueue(Comparator<E> comparator) {
         super();
-        maxHeap = new MaxHeap<>(comparator);
+        biHeap = new BiHeap<>(comparator);
     }
 
     @Override
     public int getSize() {
-        return maxHeap.size();
+        return biHeap.size();
     }
 
     @Override
     public void enqueue(E e) {
-        maxHeap.add(e);
+        biHeap.put(e);
     }
 
     @Override
     public E dequeue() {
-        return maxHeap.extractMax();
+        return biHeap.pop();
     }
 
     @Override
     public E getFront() {
-        return maxHeap.findMax();
+        return biHeap.peek();
     }
 }

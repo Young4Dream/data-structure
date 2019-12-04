@@ -25,34 +25,35 @@ public class BST<E extends Comparable<E>> {
         root = remove(root, e);
     }
 
-    public Node remove(Node node, E e) {
+    private Node remove(Node node, E e) {
         if (node == null) {
             return null;
         }
-        if (e.compareTo(node.e) > 0) {
+        if (e.compareTo(node.e) < 0) {
             node.left = remove(node.left, e);
             return node;
         } else if (e.compareTo(node.e) > 0) {
             node.right = remove(node.right, e);
             return node;
         }
+        // 匹配到了待删除节点,说明有节点删除，先维护size
         size--;
         if (node.left == null) {
-            Node right = node.right;
-            node.right = null;
-            return right;
+            return node.right;
         }
         if (node.right == null) {
-            Node left = node.left;
-            node.left = null;
-            return left;
+            return node.left;
         }
         Node successor = minimum(node.right);
         successor.right = removeMin(node.right);
-        size++;
         successor.left = node.left;
-        node.left = node.right = null;
-        node = null;
+        /**
+         * 由于removeMin中维护了size，
+         * 而上面几部操作的结果只是将successor挪动了位置
+         * 因此将其size再加回来
+         */
+        size++;
+        node = node.left = node.right = null; // help GC
         return successor;
     }
 
@@ -115,6 +116,11 @@ public class BST<E extends Comparable<E>> {
         }
         root = removeMax(root);
         return maximum.e;
+    }
+
+    public E findMax() {
+        Node maximum = maximum(root);
+        return maximum == null ? null : maximum.e;
     }
 
     private Node removeMax(Node node) {
@@ -199,7 +205,7 @@ public class BST<E extends Comparable<E>> {
         root = add(root, e);
     }
 
-    public Node add(Node node, E e) {
+    private Node add(Node node, E e) {
         if (node == null) {
             size++;
             return new Node(e);

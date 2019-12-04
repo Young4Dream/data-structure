@@ -1,7 +1,11 @@
 package com.yan.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 // 文件相关操作
 public class FileOperation {

@@ -82,6 +82,10 @@ public class BiHeap<E extends Comparable<E>> {
         array.set(r, t);
     }
 
+    public int size() {
+        return array.getSize();
+    }
+
     private void sift_up(int i) {
         if (i == 0) {
             return;
@@ -94,7 +98,7 @@ public class BiHeap<E extends Comparable<E>> {
     }
 
     private void sift_down(int i) {
-        if (i == array.getSize() - 1) return;
+        if (array.isEmpty() || i == array.getSize() - 1) return;
         int priority_child_index = find_priority_child_index(i);
         E max_child = array.get(priority_child_index);
         E current = array.get(i);

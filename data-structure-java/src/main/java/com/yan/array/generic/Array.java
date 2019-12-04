@@ -7,14 +7,6 @@ public class Array<T> {
     protected T[] data;
     protected int size;
 
-    public T[] getData() {
-        return data;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
     public Array(int capacity) {
         data = (T[]) new Object[capacity];
         size = 0;
@@ -22,6 +14,14 @@ public class Array<T> {
 
     public Array() {
         this(16);
+    }
+
+    public T[] getData() {
+        return data;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public boolean contains(T e) {

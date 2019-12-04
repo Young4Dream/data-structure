@@ -10,6 +10,7 @@ import java.util.StringJoiner;
 @SuppressWarnings("all")
 public class LinkedList<E> extends AbstractLinkedList<E> {
     public LinkedList() {
+        // 新增虚拟头结点
         head = new Node(null, null);
         size = 0;
     }

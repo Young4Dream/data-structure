@@ -68,8 +68,8 @@ public class WordDictionary {
     }
 
     protected static class Node {
-        boolean isWord;
         public TreeMap<Character, Node> next;
+        boolean isWord;
 
         public Node() {
             this(false);

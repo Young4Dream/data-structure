@@ -1,6 +1,7 @@
 package com.yan.tree;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,8 @@ public class BSTTest {
         System.out.println(integerBST.contains(12));
         System.out.println(integerBST.removeMin());
         integerBST.remove(8);
+        integerBST.remove(11);
+        Assert.assertFalse(integerBST.contains(11));
     }
 
     @After

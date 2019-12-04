@@ -1,6 +1,7 @@
 package com.yan.tree;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Administrator
@@ -43,6 +44,7 @@ public class RBTree<K extends Comparable<K>, V> {
     public boolean containsKey(K k) {
         return null != getNode(root, k);
     }
+
     // 返回以node为根节点的二分搜索树中，key所在的节点
     private Node<K, V> getNode(Node<K, V> node, K k) {
         if (node == null) {

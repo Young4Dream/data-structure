@@ -7,6 +7,7 @@ import java.util.StringJoiner;
  * @since 1.0.0
  * 2019/10/18 0018 13:38
  */
+@SuppressWarnings("all")
 public class LinkedListQueue<E> implements Queue<E> {
     private Node head, tail;
     private int size;
@@ -24,6 +25,7 @@ public class LinkedListQueue<E> implements Queue<E> {
     @Override
     public void enqueue(E e) {
         Node tail = new Node(e);
+//        this.tail = this.tail == null ? (head = tail) : (this.tail.next = tail);
         if (this.tail == null) {
             this.tail = tail;
             head = this.tail;

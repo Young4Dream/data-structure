@@ -112,10 +112,13 @@ public class MaxHeap<E extends Comparable<E>> implements Cloneable {
     }
 
     private void siftUp(int i) {
-        while (i > 0 && comparator.compare(data.get(parent(i)), data.get(i)) < 0) {
-            data.swap(i, parent(i));
-            i = parent(i);
+        if (i == 0) return;
+        int parent = parent(i);
+        if (comparator.compare(data.get(parent), data.get(i)) > 0) {
+            return;
         }
+        data.swap(i, parent);
+        siftUp(parent);
     }
 
     public E findMax() {

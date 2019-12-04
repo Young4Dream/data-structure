@@ -13,7 +13,7 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class TrieTest {
-    private  Trie trie;
+    private Trie trie;
 
     @Before
     public void before() {
