@@ -1,7 +1,9 @@
 package com.yan.tree;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 /**
  * @author Administrator
@@ -29,7 +31,7 @@ public class SegmentTree<E> {
         }
         int left = left(index);
         int right = right(index);
-        int mid = l + (r - l) / 2;
+        int mid = mid(l, r);
         buildSegmentTree(left, l, mid);
         buildSegmentTree(right, mid + 1, r);
         tree[index] = merger.apply(tree[left], tree[right]);
@@ -97,16 +99,39 @@ public class SegmentTree<E> {
     }
 
     private int mid(int l, int r) {
-        return l + (r - l) / 2;
+        return l + ((r - l) >> 1);
     }
 
+    /**
+     * @param index
+     * @param e
+     */
     public void set(int index, E e) {
         set(0, 0, size() - 1, index, e);
     }
 
-    public void setByRebuild(int index, E e) {
-        data[index] = e;
-        buildSegmentTree(0, 0, size() - 1);
+    public void fill(E e) {
+        fill(x -> e);
+    }
+
+    public void fill(E e, int l, int r) {
+        Arrays.fill(data, l, r, e);
+        buildSegmentTree(0, l, r);
+    }
+
+    public void fill(Function<E, E> function) {
+        fill(function, 0, size() - 1);
+    }
+
+    public void fill(Function<E, E> function, int l, int r) {
+        if (l == r) {
+            set(l, function.apply(data[l]));
+            return;
+        }
+        for (int i = l; i <= r; i++) {
+            data[i] = function.apply(data[i]);
+        }
+        buildSegmentTree(0, l, r);
     }
 
     private void set(int treeIndex, int l, int r, int index, E e) {

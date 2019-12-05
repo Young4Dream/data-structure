@@ -16,12 +16,16 @@ import org.junit.runners.JUnit4;
 public class SegmentTreeTest {
     private SegmentTree<Integer> segmentTree;
     private com.yan.tree.teacher.SegmentTree<Integer> tSegmentTree;
+    private Integer[] integers = new Integer[1000000];
 
     @Before
     public void before() {
 //        6, 5, 4, 3,
         tSegmentTree = new com.yan.tree.teacher.SegmentTree<>(new Integer[]{6, 5, 4, 3, 2, 1, 0}, Integer::sum);
         segmentTree = new SegmentTree<>(Integer::sum, 6, 5, 4, 3, 2, 1, 0);
+        for (int i = 0; i < integers.length; i++) {
+            integers[i] = i;
+        }
     }
 
     @Test
@@ -44,9 +48,20 @@ public class SegmentTreeTest {
         segmentTree.set(2, 12);
 //        Assert.assertEquals(12, (int) segmentTree.get(2));
         Assert.assertEquals(20, (int) segmentTree.query(1, 3));
-        segmentTree.setByRebuild(2, 13);
-//        Assert.assertEquals(12, (int) segmentTree.get(2));
-        Assert.assertEquals(21, (int) segmentTree.query(1, 3));
+    }
+
+    @Test
+    public void test_fill() throws InterruptedException {
+        segmentTree = new SegmentTree<Integer>(Math::max, integers);
+        segmentTree.fill(5, 0, integers.length - 1);
+        Assert.assertEquals(segmentTree.query(2, 3), 5, 0);
+    }
+
+    @Test
+    public void test_fill_function() throws InterruptedException {
+        segmentTree = new SegmentTree<Integer>(Math::max, integers);
+        segmentTree.fill(x -> x + 1, 0, integers.length - 1);
+        Assert.assertEquals(segmentTree.query(2, 3), 4, 0);
     }
 
     @After
