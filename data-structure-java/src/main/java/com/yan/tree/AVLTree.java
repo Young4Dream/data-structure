@@ -11,11 +11,6 @@ public class AVLTree<K extends Comparable<K>, V> {
     private Node<K, V> root;
     private int size;
 
-    private static int getHeight(Node node) {
-        if (null == node)
-            return 0;
-        return node.height;
-    }
 
     public V remove(K k) {
         Node<K, V> node = getNode(root, k);
@@ -151,8 +146,6 @@ public class AVLTree<K extends Comparable<K>, V> {
         } else {
             node.value = v;
         }
-        // reset height because which child added finally is not sure
-//        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
         return node.balance();
     }
 
@@ -173,6 +166,10 @@ public class AVLTree<K extends Comparable<K>, V> {
             this.height = 1;
         }
 
+        private static int getHeight(Node node) {
+            return node == null ? 0 : node.height;
+        }
+
         private boolean isBalanced(Node node) {
             if (node == null)
                 return true;
@@ -182,12 +179,12 @@ public class AVLTree<K extends Comparable<K>, V> {
             return isBalanced(node.left) && isBalanced(node.right);
         }
 
-        private void refreshHight() {
-            height = 1 + Math.max(getHeight(left), getHeight(right));
+        private Node<K, V> refreshHight() {
+            height = 1 + Math.max(getHeight(this.left), getHeight(this.right));
+            return this;
         }
 
         public Node<K, V> balance() {
-            refreshHight();
             int balanceFactor = getBalanceFactor();
             if (balanceFactor > 1 && left.getBalanceFactor() >= 0) {
                 return rightRotate();
@@ -207,24 +204,15 @@ public class AVLTree<K extends Comparable<K>, V> {
         }
 
         private int getBalanceFactor() {
-            int leftHight = left == null ? 0 : left.height;
-            int rightHight = right == null ? 0 : right.height;
-            return leftHight - rightHight;
+            return getHeight(left) - getHeight(right);
         }
 
         public Node<K, V> rightRotate() {
             Node x = this.left;
             Node t = x.right;
-
-            // 向右旋转过程
             x.right = this;
             this.left = t;
-
-            // 更新height
-            this.height = Math.max(getHeight(this.left), getHeight(this.right)) + 1;
-            x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
-
-            return x;
+            return x.refreshHight();
         }
 
         public Node<K, V> leftRotate() {
@@ -232,9 +220,7 @@ public class AVLTree<K extends Comparable<K>, V> {
             Node t = x.left;
             x.left = this;
             this.right = t;
-            this.height = Math.max(getHeight(this.left), getHeight(this.right)) + 1;
-            x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
-            return x;
+            return x.refreshHight();
         }
 
         @Override
