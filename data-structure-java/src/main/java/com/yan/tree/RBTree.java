@@ -14,12 +14,6 @@ public class RBTree<K extends Comparable<K>, V> {
     private Node<K, V> root;
     private int size;
 
-    private static int getHeight(Node node) {
-        if (null == node)
-            return 0;
-        return node.height;
-    }
-
     public static boolean isRed(Node node) {
         return node == null ? Node.BLACK : node.color;
     }
@@ -105,14 +99,12 @@ public class RBTree<K extends Comparable<K>, V> {
         private static final Boolean BLACK = false;
         public K key;
         public V value;
-        public int height;
         public Node<K, V> left, right;
         public boolean color;
 
         public Node(K key, V value) {
             this.key = key;
             this.value = value;
-            this.height = 1;
             this.color = RED;
         }
 
@@ -133,7 +125,6 @@ public class RBTree<K extends Comparable<K>, V> {
             if (isRed(self.left) && isRed(self.right)) {
                 self.flipColor();
             }
-            self.height = 1 + Math.max(getHeight(self.left), getHeight(self.right));
             return self;
         }
 

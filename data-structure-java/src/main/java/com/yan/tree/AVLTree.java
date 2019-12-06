@@ -52,6 +52,7 @@ public class AVLTree<K extends Comparable<K>, V> {
         return node == null ? null : node.balance();
     }
 
+    @SuppressWarnings("unused")
     private Node<K, V> removeMin(Node<K, V> node) {
         if (null == node) {
             return null;
@@ -76,7 +77,6 @@ public class AVLTree<K extends Comparable<K>, V> {
         return balance(minimum(node.left));
     }
 
-    @SuppressWarnings("all")
     public boolean containsKey(K k) {
         return getNode(root, k) != null;
     }
