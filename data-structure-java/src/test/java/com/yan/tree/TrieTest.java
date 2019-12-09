@@ -30,12 +30,11 @@ public class TrieTest {
         rTrie.add("Hello World!");
         rTrie.add("abc");
         rTrie.add("abd");
-        System.out.println(trie.startsWith("A"));
-        System.out.println(trie.startsWith("H"));
-        System.out.println(rTrie.startsWith("a"));
-//        rTrie.remove("abd");
+        assertTrue(rTrie.startsWith("a"));
+        assertFalse(rTrie.startsWith("A"));
+        assertTrue(rTrie.startsWith("H"));
         rTrie.remove("a");
-        rTrie.remove("c");
+        assertTrue(rTrie.startsWith("a"));
     }
 
     @Test

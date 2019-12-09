@@ -97,8 +97,8 @@ public class Trie {
             chars.put(cur_char, remove(sub_sequence, next));
             if (sub_sequence.length() > 0) {
                 char key = sub_sequence.charAt(0);
-                Node node1 = next.chars.get(key);
-                if (!node1.is_word && node1.chars.isEmpty()) {
+                Node next_next = next.chars.get(key);
+                if (!next_next.is_word && next_next.chars.isEmpty()) {
                     next.chars.remove(key);
                 }
             }
