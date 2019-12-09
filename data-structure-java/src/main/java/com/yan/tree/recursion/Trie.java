@@ -19,7 +19,6 @@ public class Trie {
 
     public void remove(CharSequence sequence) {
         root = root.remove(sequence, root);
-        System.out.println();
     }
 
 
@@ -34,7 +33,7 @@ public class Trie {
     static class Node {
         private boolean is_word;
         private int size;
-        private TreeMap<Character, Node> map;
+        private TreeMap<Character, Node> chars;
 
         Node() {
             this(false);
@@ -42,7 +41,7 @@ public class Trie {
 
         Node(boolean is_word) {
             this.is_word = is_word;
-            map = new TreeMap<>();
+            chars = new TreeMap<>();
         }
 
         private void add(CharSequence sequence, Node node) {
@@ -55,9 +54,8 @@ public class Trie {
             }
             char first_char = sequence.charAt(0);
             CharSequence other = sequence.subSequence(1, sequence.length());
-            node.map.putIfAbsent(first_char, new Node());
-            Node next = node.map.get(first_char);
-            add(other, next);
+            node.chars.putIfAbsent(first_char, new Node());
+            add(other, node.chars.get(first_char));
         }
 
         private boolean contains(CharSequence sequence, Node node) {
@@ -66,8 +64,8 @@ public class Trie {
             }
             char first_char = sequence.charAt(0);
             CharSequence other = sequence.subSequence(1, sequence.length());
-            Node next = node.map.get(first_char);
-            return (next != null && next.is_word) || contains(other, next);
+            Node next = node.chars.get(first_char);
+            return (next != null && next.is_word && next.chars.size() >= other.length()) || contains(other, next);
         }
 
         private boolean startsWith(CharSequence sequence, Node node) {
@@ -76,36 +74,62 @@ public class Trie {
             }
             char first_char = sequence.charAt(0);
             CharSequence other = sequence.subSequence(1, sequence.length());
-            Node next = node.map.get(first_char);
-            return node.map.containsKey(first_char) && startsWith(other, next);
+            Node next = node.chars.get(first_char);
+            return node.chars.containsKey(first_char) && startsWith(other, next);
         }
 
         public Node remove(CharSequence sequence, Node node) {
             if (null == node || sequence.length() == 0) {
                 return node;
             }
-
+            TreeMap<Character, Node> chars = node.chars;
             char cur_char = sequence.charAt(0);
-            CharSequence sub_sequence = sequence.subSequence(1, sequence.length());
-            TreeMap<Character, Node> map = node.map;
-            if (!map.containsKey(cur_char)) {
+            if (!chars.containsKey(cur_char)) {
                 return node;
             }
-            if (sub_sequence.length() == 0 && node.is_word) {
-                node.is_word = false;
+            Node next = chars.get(cur_char);
+            CharSequence sub_sequence = sequence.subSequence(1, sequence.length());
+            if (sub_sequence.length() == 0 && next.is_word) {
+                next.is_word = false;
                 size--;
                 return node;
             }
-            Node new_node = remove(sub_sequence, map.get(cur_char));
-            node.map.put(cur_char, new_node);
-            new_node.map.remove(cur_char);
-//            if (new_node.map.size() == 1) {
-//                node.map.remove(cur_char);
-//                return null;
-//            }
-            return new_node;
+            chars.put(cur_char, remove(sub_sequence, next));
+            if (sub_sequence.length() > 0) {
+                char key = sub_sequence.charAt(0);
+                Node node1 = next.chars.get(key);
+                if (!node1.is_word && node1.chars.isEmpty()) {
+                    next.chars.remove(key);
+                }
+            }
+            return node;
+        }
+
+        /**
+         * teacher's code.
+         *
+         * @see #remove(CharSequence, Node)
+         * @deprecated
+         */
+        private boolean remove(Node node, String word, int index) {
+            if (index == word.length()) {
+                if (!node.is_word)
+                    return false;
+                node.is_word = false;
+                size--;
+                return true;
+            }
+
+            char c = word.charAt(index);
+            if (!node.chars.containsKey(c))
+                return false;
+
+            boolean ret = remove(node.chars.get(c), word, index + 1);
+            Node nextNode = node.chars.get(c);
+            if (!nextNode.is_word && nextNode.chars.size() == 0)
+                node.chars.remove(word.charAt(index));
+            return ret;
         }
     }
-
 
 }

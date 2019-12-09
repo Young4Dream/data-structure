@@ -1,11 +1,12 @@
 package com.yan.tree;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Administrator
@@ -38,18 +39,28 @@ public class TrieTest {
     }
 
     @Test
+    public void test_contains() {
+        rTrie.add("abc");
+        assertFalse(rTrie.contains("ab"));
+        assertTrue(rTrie.contains("abc"));
+    }
+
+    @Test
     public void test_remove() {
         rTrie.add("ab");
-        rTrie.add("abd");
-        rTrie.remove("abd");
-        Assert.assertFalse(rTrie.contains("abd"));
-        rTrie.remove("c");
-        Assert.assertEquals(1, rTrie.size());
+        rTrie.add("a");
         rTrie.remove("a");
-        Assert.assertEquals(1, rTrie.size());
+        assertEquals(1, rTrie.size());
+        rTrie.add("a");
+        rTrie.remove("ab");
+        assertFalse(rTrie.contains("ab"));
+        rTrie.remove("c");
+        rTrie.remove("a");
+        assertEquals(0, rTrie.size());
         rTrie.add("hello");
-
-
+        rTrie.remove("hel");
+        assertEquals(1, rTrie.size());
+        assertTrue(rTrie.contains("hello"));
     }
 
     @After
